@@ -1,0 +1,33 @@
+services:
+  db:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1014
+      MYSQL_DATABASE: pbl_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1014
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - pbl_network
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - pbl_network
+
+volumes:
+  db_data:
+
+networks:
+  pbl_network:
